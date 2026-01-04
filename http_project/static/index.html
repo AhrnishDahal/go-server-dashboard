@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Go Server Dashboard</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 32px;
+      border-radius: 16px;
+      width: 420px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      margin-top: 0;
+      text-align: center;
+      font-size: 1.6rem;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.15);
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #22c55e;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🚀 Go Server Dashboard</h1>
+
+    <div class="card">
+      <span>Status</span>
+      <span class="badge">Running</span>
+    </div>
+
+    <div class="card">
+      <span>Server Time</span>
+      <span id="time">Loading...</span>
+    </div>
+
+    <div class="card">
+      <span>Version</span>
+      <span id="version">Loading...</span>
+    </div>
+
+    <footer>
+      Powered by Go · net/http
+    </footer>
+  </div>
+
+  <script>
+    async function updateData() {
+      try {
+        const timeRes = await fetch("/time");
+        document.getElementById("time").textContent =
+          await timeRes.text();
+
+        const infoRes = await fetch("/api/info");
+        const info = await infoRes.json();
+        document.getElementById("version").textContent =
+          info.version;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    updateData();
+    setInterval(updateData, 5000);
+  </script>
+
+</body>
+</html>
